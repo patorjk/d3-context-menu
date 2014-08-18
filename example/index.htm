@@ -1,0 +1,55 @@
+<!doctype>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Example</title>
+
+	<link href="../css/d3-context-menu.css" rel="stylesheet">
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+	<script src="../js/d3-context-menu.js"></script>
+</head>
+<body>
+
+	<script>
+		// Define your menu
+		var menu = [
+			{
+				title: 'Item #1',
+				action: function(elm, d, i) {
+					console.log('Item #1 clicked!');
+					console.log('The data for this circle is: ' + d);
+				}
+			},
+			{
+				title: 'Item #2',
+				action: function(elm, d, i) {
+					console.log('You have clicked the second item!');
+					console.log('The data for this circle is: ' + d);
+				}
+			}
+		]
+
+		var data = [1, 2, 3];
+
+		var g = d3.select('body').append('svg')
+			.attr('width', 200)
+			.attr('height', 400)
+			.append('g');
+
+		g.selectAll('circles')
+			.data(data)
+			.enter()
+			.append('circle')
+			.attr('r', 30)
+			.attr('fill', 'steelblue')
+			.attr('cx', function(d) {
+				return 100;
+			})
+			.attr('cy', function(d) {
+				return d * 100;
+			})
+			.on('contextmenu', d3.contextMenu(menu)); // attach menu to element
+	</script>
+</body>
+</html>
