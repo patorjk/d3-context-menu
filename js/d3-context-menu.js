@@ -6,6 +6,11 @@ d3.contextMenu = function (menu, openCallback) {
 		.append('div')
 		.attr('class', 'd3-context-menu');
 
+	// close menu
+	d3.select('body').on('click.d3-context-menu', function() {
+		d3.select('.d3-context-menu').style('display', 'none');
+	});
+
 	// this gets executed when a contextmenu event occurs
 	return function(data, index) {	
 		var elm = this;
@@ -19,12 +24,6 @@ d3.contextMenu = function (menu, openCallback) {
 			})
 			.on('click', function(d, i) {
 				d.action(elm, data, index);
-				d3.select('.d3-context-menu').style('display', 'none');
-			});
-			
-		// close when mouse away
-		d3.selectAll('.d3-context-menu')
-			.on('mouseleave', function() {
 				d3.select('.d3-context-menu').style('display', 'none');
 			});
 
