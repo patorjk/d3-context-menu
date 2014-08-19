@@ -1,12 +1,18 @@
-d3-context-menu
--------------------------
+# d3-context-menu
+
 This is a plugin for d3.js that allows you to easy use context-menus in your visualizations. It's 100% d3 based and done in the "d3 way", so you don't need to worry about including additional frameworks.
 
 It's written to be very light weight and customizable. You can see it in action here:
 
 http://plnkr.co/edit/hAx36JQhb0RsvVn7TomS?p=info
 
-Basic usage:
+### Install with Bower
+
+```
+bower install d3-context-menu
+```
+
+### Basic usage:
 
 ```
 // Define your menu
@@ -48,4 +54,16 @@ g.selectAll('circles')
 	})
 	.on('contextmenu', d3.contextMenu(menu)); // attach menu to element
 });
+```
+
+### Advanced usage:
+
+More features may come in the future, but right now the only "advanced" feature is that you can pass in a callback that will be executed before the context menu appears. This can be useful if you need something to close tooltips or perform some other task before the menu appears:
+
+```
+    ...
+    .on('contextmenu', d3.contextMenu(menu, function() {
+    	console.log('Quick! Before the menu appears!');
+    })); // attach menu to element
+
 ```
