@@ -58,7 +58,9 @@ g.selectAll('circles')
 
 ### Advanced usage:
 
-More features may come in the future, but right now the only "advanced" feature is that you can pass in a callback that will be executed before the context menu appears. This can be useful if you need something to close tooltips or perform some other task before the menu appears:
+#### Pre-show callbacks.
+
+You can pass in a callback that will be executed before the context menu appears. This can be useful if you need something to close tooltips or perform some other task before the menu appears:
 
 ```
     ...
@@ -67,3 +69,34 @@ More features may come in the future, but right now the only "advanced" feature 
     })); // attach menu to element
 
 ```
+
+#### Context-sensitive menu items
+
+You can use information from your context in menu names, simply specify a function for title which returns a string:
+
+```
+var menu = [
+	{
+		title: function(d) {
+			return 'Delete circle '+d.circleName;
+		},
+		action: function(elm, d, i) {
+			// delete it
+		}
+	},
+	{
+		title: function(d) {
+			return 'Item 2';
+		},
+		action: function(elm, d, i) {
+			// do nothing interesting
+		}
+	}
+];
+
+// Menu shown is:
+
+[Delete Circle MyCircle]
+[Item 2]
+```
+	
