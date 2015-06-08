@@ -100,3 +100,8 @@ var menu = [
 [Item 2]
 ```
 	
+#### Deleting Nodes Example
+
+The following example shows how to add a right click menu to a tree diagram:
+
+http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
