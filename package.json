@@ -1,0 +1,27 @@
+{
+  "name": "d3-context-menu",
+  "version": "0.0.1",
+  "description": "A plugin for d3.js that allows you to easily use context menus in your visualizations.",
+  "main": "js/d3-context-menu.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/patorjk/d3-context-menu.git"
+  },
+  "keywords": [
+    "d3js",
+    "context-menu",
+    "contextmenu"
+  ],
+  "author": "Patrick Gillespie",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/patorjk/d3-context-menu/issues"
+  },
+  "homepage": "https://github.com/patorjk/d3-context-menu"
+}
