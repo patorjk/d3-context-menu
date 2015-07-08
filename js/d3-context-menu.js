@@ -28,7 +28,7 @@
 
 				d3.selectAll('.d3-context-menu').html('');
 				var list = d3.selectAll('.d3-context-menu').append('ul');
-				list.selectAll('li').data(menu).enter()
+				list.selectAll('li').data(typeof menu === 'function' ? menu(data) : menu).enter()
 					.append('li')
 					.html(function(d) {
 						return (typeof d.title === 'string') ? d.title : d.title(data);

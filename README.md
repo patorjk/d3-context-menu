@@ -100,6 +100,41 @@ var menu = [
 [Item 2]
 ```
 	
+#### Dynamic menu list
+
+You can also have different lists of menu items for different nodes if `menu` is a function:
+
+```
+var menu = function(data) {
+	if (data.x > 100) {
+		return [{
+			title: 'Item #1',
+			action: function(elm, d, i) {
+				console.log('Item #1 clicked!');
+				console.log('The data for this circle is: ' + d);
+			}
+		}];
+	} else {
+		return [{
+			title: 'Item #1',
+			action: function(elm, d, i) {
+				console.log('Item #1 clicked!');
+				console.log('The data for this circle is: ' + d);
+			}
+		}, {
+			title: 'Item #2',
+			action: function(elm, d, i) {
+				console.log('Item #2 clicked!');
+				console.log('The data for this circle is: ' + d);
+			}
+		}];
+	}
+};
+
+// Menu shown for nodes with x < 100 contains 1 item, while other nodes have 2 menu items
+
+```
+	
 #### Deleting Nodes Example
 
 The following example shows how to add a right click menu to a tree diagram:
