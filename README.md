@@ -58,7 +58,7 @@ g.selectAll('circles')
 
 ### Advanced usage:
 
-#### Pre-show callbacks.
+#### Pre-show callback
 
 You can pass in a callback that will be executed before the context menu appears. This can be useful if you need something to close tooltips or perform some other task before the menu appears:
 
@@ -66,6 +66,23 @@ You can pass in a callback that will be executed before the context menu appears
     ...
     .on('contextmenu', d3.contextMenu(menu, function() {
     	console.log('Quick! Before the menu appears!');
+    })); // attach menu to element
+
+```
+
+#### Post-show callback
+
+You can pass in a callback that will be executed after the context menu appears using the onClose option:
+
+```
+    ...
+    .on('contextmenu', d3.contextMenu(menu, {
+    	onOpen: function() {
+    		console.log('Quick! Before the menu appears!');
+    	},
+    	onClose: function() {
+    		console.log('Menu has been closed.');
+    	}
     })); // attach menu to element
 
 ```
