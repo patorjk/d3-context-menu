@@ -9,7 +9,18 @@
 	}
 }(	this, 
 	function(d3) {
-		return function (menu, openCallback) {
+		return function (menu, opts) {
+
+			var openCallback,
+				closeCallback;
+
+			if (typeof opts === 'function') {
+				openCallback = opts;
+			} else {
+				opts = opts || {};
+				openCallback = opts.onOpen;
+				closeCallback = opts.onClose;
+			}
 
 			// create the div element that will hold the context menu
 			d3.selectAll('.d3-context-menu').data([1])
@@ -20,6 +31,9 @@
 			// close menu
 			d3.select('body').on('click.d3-context-menu', function() {
 				d3.select('.d3-context-menu').style('display', 'none');
+				if (closeCallback) {
+					closeCallback();
+				}
 			});
 
 			// this gets executed when a contextmenu event occurs
@@ -36,6 +50,10 @@
 					.on('click', function(d, i) {
 						d.action(elm, data, index);
 						d3.select('.d3-context-menu').style('display', 'none');
+
+						if (closeCallback) {
+							closeCallback();
+						}
 					});
 
 				// the openCallback allows an action to fire before the menu is displayed

@@ -49,7 +49,14 @@
 			.attr('cy', function(d) {
 				return d * 100;
 			})
-			.on('contextmenu', d3.contextMenu(menu)); // attach menu to element
+			.on('contextmenu', d3.contextMenu(menu, {
+				onOpen: function() {
+					console.log('opened!');
+				},
+				onClose: function() {
+					console.log('closed!');
+				}
+			})); // attach menu to element
 	</script>
 </body>
 </html>
