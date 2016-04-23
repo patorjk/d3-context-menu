@@ -22,7 +22,8 @@ var menu = [
 		action: function(elm, d, i) {
 			console.log('Item #1 clicked!');
 			console.log('The data for this circle is: ' + d);
-		}
+		},
+		disabled: false // optional, defaults to false
 	},
 	{
 		title: 'Item #2',
@@ -57,6 +58,32 @@ g.selectAll('circles')
 ```
 
 ### Advanced usage:
+
+#### Headers and Dividers
+
+Menus can have Headers and Dividers. To specify a header simply don't define an "action" property. To specify a divider, simply add a "divider: true" property to the menu item, and it'll be considered a divider. Example menu definition:
+
+```
+		var menu = [
+			{
+				title: 'Header',
+			},
+			{
+				title: 'Normal item',
+				action: function() {}
+			},
+			{
+				divider: true
+			},
+			{
+				title: 'Last item',
+				action: function() {}
+			}
+		];
+
+```
+
+See the index.htm file in the example folder to see this in action.
 
 #### Pre-show callback
 
@@ -157,3 +184,8 @@ var menu = function(data) {
 The following example shows how to add a right click menu to a tree diagram:
 
 http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
+
+### What's new in version 0.1.1
+
+* Header and Divider items.
+* Ability to disable items.

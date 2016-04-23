@@ -44,10 +44,31 @@
 				var list = d3.selectAll('.d3-context-menu').append('ul');
 				list.selectAll('li').data(typeof menu === 'function' ? menu(data) : menu).enter()
 					.append('li')
+					.attr('class', function(d) {
+						var ret = '';
+						if (d.divider) {
+							ret += ' is-divider';
+						}
+						if (d.disabled) {
+							ret += ' is-disabled';
+						}
+						if (!d.action) {
+							ret += ' is-header';
+						}
+						return ret;
+					})
 					.html(function(d) {
+						if (d.divider) {
+							return '<hr>';
+						}
+						if (!d.title) {
+							console.error('No title attribute set. Check the spelling of your options.');
+						}
 						return (typeof d.title === 'string') ? d.title : d.title(data);
 					})
 					.on('click', function(d, i) {
+						if (d.disabled) return; // do nothing if disabled
+						if (!d.action) return; // headers have no "action"
 						d.action(elm, data, index);
 						d3.select('.d3-context-menu').style('display', 'none');
 

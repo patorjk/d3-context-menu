@@ -14,6 +14,7 @@
 	<script>
 		// Define your menu
 		var menu = [
+
 			{
 				title: 'Item #1',
 				action: function(elm, d, i) {
@@ -27,7 +28,49 @@
 					console.log('You have clicked the second item!');
 					console.log('The data for this circle is: ' + d);
 				}
-			}
+			},
+
+			{
+				title: function() {
+					if (menu[3].disabled) {
+						return 'Re-enable menu item #4';
+					} else {
+						return 'Disable menu item #4';
+					}
+				},
+				action: function(elm, d, i) {
+					menu[3].disabled = !menu[3].disabled;
+				}
+			},
+			{
+				title: 'Item #4',
+				disabled: false,
+				action: function(elm, d, i) {
+					console.log('You have clicked the 4th item!');
+					console.log('The data for this circle is: ' + d);
+				}
+			},
+
+			/*
+				If an item has a "divider" property set to true, it'll be considered a divider
+			*/
+			{
+				divider: true
+			},
+
+			/*
+				If you don't define an action for a menu item, it'll be considered a "header" item
+			*/
+			{
+				title: 'Header'
+			},
+			{
+				title: 'Last item',
+				action: function(elm, d, i) {
+					console.log('You have clicked the last item!');
+					console.log('The data for this circle is: ' + d);
+				}
+			},
 		]
 
 		var data = [1, 2, 3];
