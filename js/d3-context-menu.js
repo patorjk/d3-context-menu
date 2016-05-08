@@ -41,7 +41,13 @@
 				var elm = this;
 
 				d3.selectAll('.d3-context-menu').html('');
-				var list = d3.selectAll('.d3-context-menu').append('ul');
+				var list = d3.selectAll('.d3-context-menu')
+					.on('contextmenu', function(d) {
+						d3.select('.d3-context-menu').style('display', 'none'); 
+		  				d3.event.preventDefault();
+						d3.event.stopPropagation();
+					})
+					.append('ul');
 				list.selectAll('li').data(typeof menu === 'function' ? menu(data) : menu).enter()
 					.append('li')
 					.attr('class', function(d) {
