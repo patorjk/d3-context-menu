@@ -185,6 +185,10 @@ The following example shows how to add a right click menu to a tree diagram:
 
 http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
 
+### What's new in version 0.1.2
+
+* If contextmenu is clicked twice it will close rather than open the browser's context menu.
+
 ### What's new in version 0.1.1
 
 * Header and Divider items.
