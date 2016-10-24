@@ -4,7 +4,18 @@
 			d3.contextMenu = factory(d3);
 			return d3.contextMenu;
 		};
-	} else {
+	} else if(typeof define === 'function' && define.amd) {
+		try {
+			var d3 = require('d3');
+		} catch (e) {
+			d3 = root.d3;
+		}
+
+		d3.contextMenu = factory(d3);
+		define([], function() {
+			return d3.contextMenu;
+		});
+	} else if(root.d3) {
 		root.d3.contextMenu = factory(root.d3);
 	}
 }(	this, 
