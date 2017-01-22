@@ -23,7 +23,8 @@
 		return function (menu, opts) {
 
 			var openCallback,
-				closeCallback;
+				closeCallback,
+			    alignToTarget;
 
 			if (typeof opts === 'function') {
 				openCallback = opts;
@@ -31,6 +32,7 @@
 				opts = opts || {};
 				openCallback = opts.onOpen;
 				closeCallback = opts.onClose;
+			    alignToTarget = opts.alignToTarget;
 			}
 
 			// create the div element that will hold the context menu
@@ -104,8 +106,12 @@
 
 				// display context menu
 				d3.select('.d3-context-menu')
-					.style('left', (d3.event.pageX - 2) + 'px')
-					.style('top', (d3.event.pageY - 2) + 'px')
+					.style('left', (alignToTarget ?
+                                d3.event.currentTarget.getBoundingClientRect().right + 2
+                                : d3.event.pageX - 2) + 'px')
+					.style('top', (alignToTarget ? 
+                                d3.event.currentTarget.getBoundingClientRect().top 
+                                : d3.event.pageY - 2 ) + 'px')
 					.style('display', 'block');
 
 				d3.event.preventDefault();
