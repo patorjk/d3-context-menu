@@ -1,9 +1,7 @@
 (function(root, factory) {
 	if (typeof module === 'object' && module.exports) {
-		module.exports = function(d3) {
-			d3.contextMenu = factory(d3);
-			return d3.contextMenu;
-		};
+		var d3 = require('d3');
+		module.exports = factory(d3);
 	} else if(typeof define === 'function' && define.amd) {
 		try {
 			var d3 = require('d3');
