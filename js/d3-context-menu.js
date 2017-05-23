@@ -23,7 +23,8 @@
 		return function (menu, opts) {
 
 			var openCallback,
-				closeCallback;
+				closeCallback,
+				afterOpenbCallback;
 
 			if (typeof opts === 'function') {
 				openCallback = opts;
@@ -31,6 +32,7 @@
 				opts = opts || {};
 				openCallback = opts.onOpen;
 				closeCallback = opts.onClose;
+				afterOpenbCallback = opts.afterOpen;
 			}
 
 			// create the div element that will hold the context menu
@@ -107,6 +109,12 @@
 					.style('left', (d3.event.pageX - 2) + 'px')
 					.style('top', (d3.event.pageY - 2) + 'px')
 					.style('display', 'block');
+
+                if (afterOpenbCallback) {
+                    if (afterOpenbCallback(data, index) === false) {
+                        return;
+                    }
+                }
 
 				d3.event.preventDefault();
 				d3.event.stopPropagation();
