@@ -23,7 +23,8 @@
 		return function (menu, opts) {
 
 			var openCallback,
-				closeCallback;
+				closeCallback,
+				positionProvider;
 
 			if (typeof opts === 'function') {
 				openCallback = opts;
@@ -31,35 +32,47 @@
 				opts = opts || {};
 				openCallback = opts.onOpen;
 				closeCallback = opts.onClose;
+				positionProvider = opts.position;
 			}
-
-			// create the div element that will hold the context menu
-			d3.selectAll('.d3-context-menu').data([1])
-				.enter()
-				.append('div')
-				.attr('class', 'd3-context-menu');
-
-			// close menu
-			d3.select('body').on('click.d3-context-menu', function() {
-				d3.select('.d3-context-menu').style('display', 'none');
-				if (closeCallback) {
-					closeCallback();
-				}
-			});
 
 			// this gets executed when a contextmenu event occurs
 			return function(data, index) {
 				var elm = this;
 
-				d3.selectAll('.d3-context-menu').html('');
+				if (d3.selectAll('.d3-context-menu').size() > 0) {
+					d3.selectAll('.d3-context-menu').remove();
+					if (closeCallback) {
+						closeCallback(data, elm, index);
+					}
+				}
+
+				// close menu on click outside
+				d3.select('body').on('click.d3-context-menu', function () {
+					d3.select('body').on('click.d3-context-menu', null);
+
+					d3.selectAll('.d3-context-menu').remove();
+
+					if (closeCallback) {
+						closeCallback(data, elm, index);
+					}
+				});
+
+				// create the div element that will hold the context menu
+				d3.selectAll('.d3-context-menu').data([1])
+					.enter()
+					.append('div')
+					.attr('class', 'd3-context-menu');
+				
 				var list = d3.selectAll('.d3-context-menu')
 					.on('contextmenu', function(d) {
-						d3.select('.d3-context-menu').style('display', 'none'); 
-		  				d3.event.preventDefault();
+						d3.selectAll('.d3-context-menu').remove();
+						
+						d3.event.preventDefault();
 						d3.event.stopPropagation();
 					})
 					.append('ul');
-				list.selectAll('li').data(typeof menu === 'function' ? menu(data) : menu).enter()
+					
+				list.selectAll('li').data(typeof menu === 'function' ? menu(data, elm, index) : menu).enter()
 					.append('li')
 					.attr('class', function(d) {
 						var ret = '';
@@ -81,31 +94,38 @@
 						if (!d.title) {
 							console.error('No title attribute set. Check the spelling of your options.');
 						}
-						return (typeof d.title === 'string') ? d.title : d.title(data);
+						return (typeof d.title === 'string') ? d.title : d.title(data, elm, index);
 					})
 					.on('click', function(d, i) {
 						if (d.disabled) return; // do nothing if disabled
 						if (!d.action) return; // headers have no "action"
-						d.action(elm, data, index);
-						d3.select('.d3-context-menu').style('display', 'none');
+
+						d3.select('body').on('click.d3-context-menu', null);
+
+						d.action(data, elm, index);
+						
+						d3.selectAll('.d3-context-menu').remove();
 
 						if (closeCallback) {
-							closeCallback();
+							closeCallback(data, elm, index);
 						}
 					});
 
 				// the openCallback allows an action to fire before the menu is displayed
 				// an example usage would be closing a tooltip
-				if (openCallback) {
-					if (openCallback(data, index) === false) {
-						return;
-					}
+				if (openCallback && openCallback(data, elm, index) === false) {
+					return;
 				}
+
+				// get position
+				var position = typeof positionProvider === 'function' ?
+					positionProvider(data, elm, index) :
+					positionProvider;
 
 				// display context menu
 				d3.select('.d3-context-menu')
-					.style('left', (d3.event.pageX - 2) + 'px')
-					.style('top', (d3.event.pageY - 2) + 'px')
+					.style('left', position ? position.left : (d3.event.pageX - 2) + 'px')
+					.style('top', position ? position.top : (d3.event.pageY - 2) + 'px')
 					.style('display', 'block');
 
 				d3.event.preventDefault();

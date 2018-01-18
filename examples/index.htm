@@ -14,19 +14,18 @@
 	<script>
 		// Define your menu
 		var menu = [
-
 			{
 				title: 'Item #1',
-				action: function(elm, d, i) {
+				action: function(data, elm, index) {
 					console.log('Item #1 clicked!');
-					console.log('The data for this circle is: ' + d);
+					console.log('The data for this circle is: ' + data);
 				}
 			},
 			{
 				title: 'Item #2',
-				action: function(elm, d, i) {
+				action: function(data, elm, index) {
 					console.log('You have clicked the second item!');
-					console.log('The data for this circle is: ' + d);
+					console.log('The data for this circle is: ' + data);
 				}
 			},
 
@@ -45,9 +44,9 @@
 			{
 				title: 'Item #4',
 				disabled: false,
-				action: function(elm, d, i) {
+				action: function(data, elm, index) {
 					console.log('You have clicked the 4th item!');
-					console.log('The data for this circle is: ' + d);
+					console.log('The data for this circle is: ' + data);
 				}
 			},
 
@@ -66,9 +65,9 @@
 			},
 			{
 				title: 'Last item',
-				action: function(elm, d, i) {
+				action: function(data, elm, index) {
 					console.log('You have clicked the last item!');
-					console.log('The data for this circle is: ' + d);
+					console.log('The data for this circle is: ' + data);
 				}
 			},
 		]
@@ -93,11 +92,32 @@
 				return d * 100;
 			})
 			.on('contextmenu', d3.contextMenu(menu, {
-				onOpen: function() {
+				onOpen: function(data, elm, index) {
 					console.log('opened!');
+					console.log('The data for this circle is: ' + data);
 				},
-				onClose: function() {
+				onClose: function(data, elm, index) {
 					console.log('closed!');
+					console.log('The data for this circle is: ' + data);
+				},
+				position: function (data, elm, index) {
+					var bounds = elm.getBoundingClientRect();
+
+					if (data === 1) {
+						return {
+							left: bounds.left + bounds.width / 2,
+							top: bounds.top + bounds.height + 5
+						};
+					}
+					else if (data === 2) {
+						return {
+							left: bounds.left + bounds.width + 5,
+							top: bounds.top + bounds.height / 2
+						};
+					}
+					else {
+						return null;
+					}
 				}
 			})); // attach menu to element
 	</script>
