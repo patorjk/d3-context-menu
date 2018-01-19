@@ -19,17 +19,17 @@ bower install d3-context-menu
 var menu = [
 	{
 		title: 'Item #1',
-		action: function(elm, d, i) {
+		action: function(data, elm, index) {
 			console.log('Item #1 clicked!');
-			console.log('The data for this circle is: ' + d);
+			console.log('The data for this circle is: ' + data);
 		},
 		disabled: false // optional, defaults to false
 	},
 	{
 		title: 'Item #2',
-		action: function(elm, d, i) {
+		action: function(data, elm, index) {
 			console.log('You have clicked the second item!');
-			console.log('The data for this circle is: ' + d);
+			console.log('The data for this circle is: ' + data);
 		}
 	}
 ]
@@ -85,6 +85,24 @@ Menus can have Headers and Dividers. To specify a header simply don't define an 
 
 See the index.htm file in the example folder to see this in action.
 
+#### Control position
+
+By default, the menu will be positioned at mouse coordinates. However, a `position` property or function can be provided to control where the menu will be positioned:
+
+```
+    ...
+    .on('contextmenu', d3.contextMenu(menu, {
+        position: function (data, elm, index) {
+            var bounds = elm.getBoundingClientRect();
+            return {
+                left: bounds.left + bounds.width / 2,
+                top: bounds.top + bounds.height + 5
+            };
+        }
+    }));
+
+```
+
 #### Pre-show callback
 
 You can pass in a callback that will be executed before the context menu appears. This can be useful if you need something to close tooltips or perform some other task before the menu appears:
@@ -92,7 +110,7 @@ You can pass in a callback that will be executed before the context menu appears
 ```
     ...
     .on('contextmenu', d3.contextMenu(menu, function() {
-    	console.log('Quick! Before the menu appears!');
+        console.log('Quick! Before the menu appears!');
     })); // attach menu to element
 
 ```
@@ -121,18 +139,18 @@ You can use information from your context in menu names, simply specify a functi
 ```
 var menu = [
 	{
-		title: function(d) {
-			return 'Delete circle '+d.circleName;
+		title: function(data) {
+			return 'Delete circle ' + data.circleName;
 		},
-		action: function(elm, d, i) {
+		action: function(data, elm, index) {
 			// delete it
 		}
 	},
 	{
-		title: function(d) {
+		title: function(data, elm, index) {
 			return 'Item 2';
 		},
-		action: function(elm, d, i) {
+		action: function(data, elm, index) {
 			// do nothing interesting
 		}
 	}
@@ -149,27 +167,27 @@ var menu = [
 You can also have different lists of menu items for different nodes if `menu` is a function:
 
 ```
-var menu = function(data) {
+var menu = function(data, elm, index) {
 	if (data.x > 100) {
 		return [{
 			title: 'Item #1',
-			action: function(elm, d, i) {
+			action: function(data, elm, index) {
 				console.log('Item #1 clicked!');
-				console.log('The data for this circle is: ' + d);
+				console.log('The data for this circle is: ' + data);
 			}
 		}];
 	} else {
 		return [{
 			title: 'Item #1',
-			action: function(elm, d, i) {
+			action: function(data, elm, index) {
 				console.log('Item #1 clicked!');
-				console.log('The data for this circle is: ' + d);
+				console.log('The data for this circle is: ' + data);
 			}
 		}, {
 			title: 'Item #2',
-			action: function(elm, d, i) {
+			action: function(data, elm, index) {
 				console.log('Item #2 clicked!');
-				console.log('The data for this circle is: ' + d);
+				console.log('The data for this circle is: ' + data);
 			}
 		}];
 	}
@@ -184,6 +202,12 @@ var menu = function(data) {
 The following example shows how to add a right click menu to a tree diagram:
 
 http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
+
+### What's new in version 1.0.0
+* All provided callbacks receive data, element and index as parameters
+* Menu is created an destroyed correctly
+* Events are created and destroyed correctly
+* Posibility to control menu position 
 
 ### What's new in version 0.1.2
 

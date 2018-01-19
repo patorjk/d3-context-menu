@@ -7,7 +7,8 @@
     "example": "examples"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dist": "minify js/d3-context-menu.js > dist/d3-context-menu.min.js && minify css/d3-context-menu.css > dist/d3-context-menu.min.css"
   },
   "repository": {
     "type": "git",
@@ -23,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/patorjk/d3-context-menu/issues"
   },
-  "homepage": "https://github.com/patorjk/d3-context-menu"
+  "homepage": "https://github.com/patorjk/d3-context-menu",
+  "devDependencies": {
+    "minify": "^3.0.2"
+  }
 }
