@@ -113,10 +113,38 @@
 					}
 				}
 
+				//console.log(this.parentNode.parentNode.parentNode);//.getBoundingClientRect());   Use this if you want to align your menu from the containing element, otherwise aligns towards center of window
+
+				var doc = document.documentElement;
+				var pageWidth = window.innerWidth || doc.clientWidth;
+				var pageHeight = window.innerHeight || doc.clientHeight;
+
+				var horizontalAlignment = 'left';
+				var horizontalAlignmentReset = 'right';
+				var horizontalValue = d3.event.pageX - 2;
+				if (d3.event.pageX > pageWidth/2){
+					horizontalAlignment = 'right';
+					horizontalAlignmentReset = 'left';
+					horizontalValue = pageWidth - d3.event.pageX - 2;
+				} 
+				
+
+				var verticalAlignment = 'top';
+				var verticalAlignmentReset = 'bottom';
+				var verticalValue = d3.event.pageY - 2;
+				if (d3.event.pageY > pageHeight/2){
+					verticalAlignment = 'bottom';
+					verticalAlignmentReset = 'top';
+					verticalValue = pageHeight - d3.event.pageY - 2	;
+				} 
+
 				// display context menu
 				d3.select('.d3-context-menu')
-					.style('left', (d3.event.pageX - 2) + 'px')
-					.style('top', (d3.event.pageY - 2) + 'px')
+					.style(horizontalAlignment, (horizontalValue) + 'px')
+					.style(horizontalAlignmentReset, null)
+					.style(verticalAlignment, (verticalValue) + 'px')
+					.style(verticalAlignmentReset, null)
+
 					.style('display', 'block');
 
 				d3.event.preventDefault();
