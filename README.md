@@ -185,6 +185,11 @@ The following example shows how to add a right click menu to a tree diagram:
 
 http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
 
+### What's new in version 0.1.3
+* Fixed issue where context menu element is never removed from DOM
+* Fixed issue where `<body>` click event is never removed
+* Fixed issue where the incorrect `onClose` callback was called when menu was closed as a result of clicking outside
+
 ### What's new in version 0.1.2
 
 * If contextmenu is clicked twice it will close rather than open the browser's context menu.

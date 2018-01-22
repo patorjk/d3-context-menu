@@ -18,7 +18,7 @@
 	} else if(root.d3) {
 		root.d3.contextMenu = factory(root.d3);
 	}
-}(	this, 
+}(	this,
 	function(d3) {
 		return function (menu, opts) {
 
@@ -33,29 +33,44 @@
 				closeCallback = opts.onClose;
 			}
 
-			// create the div element that will hold the context menu
-			d3.selectAll('.d3-context-menu').data([1])
-				.enter()
-				.append('div')
-				.attr('class', 'd3-context-menu');
+			var createMenu = function () {
+				// create the div element that will hold the context menu
+				d3.selectAll('.d3-context-menu').data([1])
+					.enter()
+					.append('div')
+					.attr('class', 'd3-context-menu');
+			};
 
-			// close menu
-			d3.select('body').on('click.d3-context-menu', function() {
-				d3.select('.d3-context-menu').style('display', 'none');
-				if (closeCallback) {
-					closeCallback();
+			var closeMenu = function () {
+				var contextMenuElm = d3.select('.d3-context-menu');
+				d3.select('body').on('click.d3-context-menu', null);
+
+				if (contextMenuElm.size() > 0) {
+					contextMenuElm.remove();
+
+					if (closeCallback) {
+						closeCallback();
+					}
 				}
-			});
+			};
 
 			// this gets executed when a contextmenu event occurs
 			return function(data, index) {
 				var elm = this;
 
-				d3.selectAll('.d3-context-menu').html('');
+				// close any menu that's already opened
+				closeMenu();
+
+				// create new menu container
+				createMenu();
+
+				// close menu on click outside
+				d3.select('body').on('click.d3-context-menu', closeMenu);
+
 				var list = d3.selectAll('.d3-context-menu')
 					.on('contextmenu', function(d) {
-						d3.select('.d3-context-menu').style('display', 'none'); 
-		  				d3.event.preventDefault();
+						closeMenu();
+						d3.event.preventDefault();
 						d3.event.stopPropagation();
 					})
 					.append('ul');
@@ -87,11 +102,7 @@
 						if (d.disabled) return; // do nothing if disabled
 						if (!d.action) return; // headers have no "action"
 						d.action(elm, data, index);
-						d3.select('.d3-context-menu').style('display', 'none');
-
-						if (closeCallback) {
-							closeCallback();
-						}
+						closeMenu();
 					});
 
 				// the openCallback allows an action to fire before the menu is displayed
