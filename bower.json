@@ -1,6 +1,6 @@
 {
   "name": "d3-context-menu",
-  "version": "0.1.3",
+  "version": "0.2.1",
   "main": [
     "js/d3-context-menu.js",
     "css/d3-context-menu.css"

@@ -185,6 +185,59 @@ The following example shows how to add a right click menu to a tree diagram:
 
 http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
 
+#### Explicitly set menu position
+
+Default position can be overwritten by providing a `position` option (either object or function returning an object):
+
+```
+    ...
+    .on('contextmenu', d3.contextMenu(menu, {
+    	onOpen: function() {
+    		...
+    	},
+    	onClose: function() {
+    		...
+    	},
+		position: {
+			top: 100,
+			left: 200
+		}
+    })); // attach menu to element
+
+```
+
+or
+
+```
+    ...
+    .on('contextmenu', d3.contextMenu(menu, {
+    	onOpen: function() {
+    		...
+    	},
+    	onClose: function() {
+    		...
+    	},
+		position: function(d, elm, i) {
+			var bounds = elm.getBoundingClientRect();
+
+			// eg. align bottom-left
+			return {
+				top: bounds.top + bounds.height,
+				left: bounds.left
+			}
+		}
+    })); // attach menu to element
+
+```
+
+The following example shows how to add a right click menu to a tree diagram:
+
+http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
+
+### What's new in version 0.2.1
+* Ability to set menu position
+* Minified css and js versions
+
 ### What's new in version 0.1.3
 * Fixed issue where context menu element is never removed from DOM
 * Fixed issue where `<body>` click event is never removed
