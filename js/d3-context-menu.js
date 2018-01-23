@@ -116,7 +116,7 @@
 				}
 
 				// get position
-				var position = null;
+				var position = positionProvider;
 				if (typeof positionProvider === 'function') {
 					position = positionProvider(data, elm, index);
 				}
