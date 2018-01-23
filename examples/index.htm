@@ -8,46 +8,57 @@
 
 	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
 	<script src="../js/d3-context-menu.js"></script>
+
+	<style>
+		.d3-context-menu-theme.dark {
+			background: black;
+			color: white;
+		}
+	</style>
 </head>
 <body>
 
 	<script>
+		var item4Disabled = false;
+		var useDarkTheme = false;
+		
 		// Define your menu
 		var menu = [
 
 			{
-				title: 'Item #1',
-				action: function(elm, d, i) {
-					console.log('Item #1 clicked!');
-					console.log('The data for this circle is: ' + d);
+				title: 'Toggle dark theme',
+				action: function (data, index) {
+					console.log('Item clicked', 'element:', this, 'data:', data, 'index:', index);
+					useDarkTheme = !useDarkTheme;
 				}
 			},
 			{
 				title: 'Item #2',
-				action: function(elm, d, i) {
-					console.log('You have clicked the second item!');
-					console.log('The data for this circle is: ' + d);
+				action: function (data, index) {
+					console.log('Item clicked', 'element:', this, 'data:', data, 'index:', index);
 				}
 			},
 
 			{
-				title: function() {
-					if (menu[3].disabled) {
+				title: function (data, index) {
+					if (item4Disabled) {
 						return 'Re-enable menu item #4';
 					} else {
 						return 'Disable menu item #4';
 					}
 				},
-				action: function(elm, d, i) {
-					menu[3].disabled = !menu[3].disabled;
+				action: function (data, index) {
+					console.log('Disabling item 4!', 'element:', this, 'data:', data, 'index:', index);
+					item4Disabled = !item4Disabled;
 				}
 			},
 			{
 				title: 'Item #4',
-				disabled: false,
-				action: function(elm, d, i) {
-					console.log('You have clicked the 4th item!');
-					console.log('The data for this circle is: ' + d);
+				disabled: function (data, index) {
+					return item4Disabled;
+				},
+				action: function (data, index) {
+					console.log('Item clicked', 'element:', this, 'data:', data, 'index:', index);
 				}
 			},
 
@@ -66,14 +77,13 @@
 			},
 			{
 				title: 'Last item',
-				action: function(elm, d, i) {
-					console.log('You have clicked the last item!');
-					console.log('The data for this circle is: ' + d);
+				action: function (data, index) {
+					console.log('Item clicked', 'element:', this, 'data:', data, 'index:', index);
 				}
 			},
 		]
 
-		var data = [1, 2, 3];
+		var data = ['red', 'green', 'steelblue'];
 
 		var g = d3.select('body').append('svg')
 			.attr('width', 200)
@@ -85,23 +95,33 @@
 			.enter()
 			.append('circle')
 			.attr('r', 30)
-			.attr('fill', 'steelblue')
+			.attr('fill', function (d) {
+				return d;
+			})
 			.attr('cx', function(d) {
 				return 100;
 			})
-			.attr('cy', function(d) {
-				return d * 100;
+			.attr('cy', function(d, i) {
+				return (i + 1) * 100;
 			})
 			.on('contextmenu', d3.contextMenu(menu, {
-				onOpen: function() {
-					console.log('opened!');
+				theme: function () {
+					if (useDarkTheme) {
+						return 'd3-context-menu-theme dark';
+					}
+					else {
+						return 'd3-context-menu-theme';
+					}
 				},
-				onClose: function() {
-					console.log('closed!');
+				onOpen: function (data, index) {
+					console.log('Menu Opened!', 'element:', this, 'data:', data, 'index:', index);
 				},
-				position: function (d, elm) {
-					var bounds = elm.getBoundingClientRect();
-					if (d === 1) {
+				onClose: function (data, index) {
+					console.log('Menu Closed!', 'element:', this, 'data:', data, 'index:', index);
+				},
+				position: function (data, index) {
+					var bounds = this.getBoundingClientRect();
+					if (data === 'green') {
 						// first circle will have the menu aligned top-right
 						return {
 							left: bounds.left + bounds.width + 10,
