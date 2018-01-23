@@ -90,10 +90,10 @@ See the index.htm file in the example folder to see this in action.
 You can pass in a callback that will be executed before the context menu appears. This can be useful if you need something to close tooltips or perform some other task before the menu appears:
 
 ```
-    ...
-    .on('contextmenu', d3.contextMenu(menu, function() {
-    	console.log('Quick! Before the menu appears!');
-    })); // attach menu to element
+	...
+	.on('contextmenu', d3.contextMenu(menu, function() {
+		console.log('Quick! Before the menu appears!');
+	})); // attach menu to element
 
 ```
 
@@ -102,15 +102,15 @@ You can pass in a callback that will be executed before the context menu appears
 You can pass in a callback that will be executed after the context menu appears using the onClose option:
 
 ```
-    ...
-    .on('contextmenu', d3.contextMenu(menu, {
-    	onOpen: function() {
-    		console.log('Quick! Before the menu appears!');
-    	},
-    	onClose: function() {
-    		console.log('Menu has been closed.');
-    	}
-    })); // attach menu to element
+	...
+	.on('contextmenu', d3.contextMenu(menu, {
+		onOpen: function() {
+			console.log('Quick! Before the menu appears!');
+		},
+		onClose: function() {
+			console.log('Menu has been closed.');
+		}
+	})); // attach menu to element
 
 ```
 
@@ -190,33 +190,33 @@ http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
 Default position can be overwritten by providing a `position` option (either object or function returning an object):
 
 ```
-    ...
-    .on('contextmenu', d3.contextMenu(menu, {
-    	onOpen: function() {
-    		...
-    	},
-    	onClose: function() {
-    		...
-    	},
+	...
+	.on('contextmenu', d3.contextMenu(menu, {
+		onOpen: function() {
+			...
+		},
+		onClose: function() {
+			...
+		},
 		position: {
 			top: 100,
 			left: 200
 		}
-    })); // attach menu to element
+	})); // attach menu to element
 
 ```
 
 or
 
 ```
-    ...
-    .on('contextmenu', d3.contextMenu(menu, {
-    	onOpen: function() {
-    		...
-    	},
-    	onClose: function() {
-    		...
-    	},
+	...
+	.on('contextmenu', d3.contextMenu(menu, {
+		onOpen: function() {
+			...
+		},
+		onClose: function() {
+			...
+		},
 		position: function(d, elm, i) {
 			var bounds = elm.getBoundingClientRect();
 
@@ -226,7 +226,7 @@ or
 				left: bounds.left
 			}
 		}
-    })); // attach menu to element
+	})); // attach menu to element
 
 ```
 
