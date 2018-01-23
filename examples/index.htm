@@ -98,6 +98,16 @@
 				},
 				onClose: function() {
 					console.log('closed!');
+				},
+				position: function (d, elm) {
+					var bounds = elm.getBoundingClientRect();
+					if (d === 1) {
+						// first circle will have the menu aligned top-right
+						return {
+							left: bounds.left + bounds.width + 10,
+							top: bounds.top
+						}
+					}
 				}
 			})); // attach menu to element
 	</script>

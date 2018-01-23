@@ -23,7 +23,8 @@
 		return function (menu, opts) {
 
 			var openCallback,
-				closeCallback;
+				closeCallback,
+				positionProvider;
 
 			if (typeof opts === 'function') {
 				openCallback = opts;
@@ -31,6 +32,7 @@
 				opts = opts || {};
 				openCallback = opts.onOpen;
 				closeCallback = opts.onClose;
+				positionProvider = opts.position;
 			}
 
 			var createMenu = function () {
@@ -113,10 +115,16 @@
 					}
 				}
 
+				// get position
+				var position = null;
+				if (typeof positionProvider === 'function') {
+					position = positionProvider(data, elm, index);
+				}
+
 				// display context menu
 				d3.select('.d3-context-menu')
-					.style('left', (d3.event.pageX - 2) + 'px')
-					.style('top', (d3.event.pageY - 2) + 'px')
+					.style('left', (position ? position.left : d3.event.pageX - 2) + 'px')
+					.style('top', (position ? position.top : d3.event.pageY - 2) + 'px')
 					.style('display', 'block');
 
 				d3.event.preventDefault();
