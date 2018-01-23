@@ -7,6 +7,12 @@
 	z-index: 1200;
 }
 
+.d3-context-menu ul,
+.d3-context-menu ul li {
+	margin: 0;
+	padding: 0;
+}
+
 .d3-context-menu ul {
 	list-style-type: none;
 	cursor: default;
@@ -35,7 +41,7 @@
 */
 
 .d3-context-menu ul li.is-divider {
-	padding: 0px 0px;
+	padding: 0;
 }
 
 /* Theming
@@ -51,8 +57,7 @@
 }
 
 .d3-context-menu-theme ul {
-	margin: 4px 0px;
-	padding: 0px;
+	margin: 4px 0;
 }
 
 .d3-context-menu-theme ul li {
