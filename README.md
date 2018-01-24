@@ -266,13 +266,13 @@ The following example shows how to add a right click menu to a tree diagram:
 
 http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
 
-### What's new in version 1.0.0
-* Default theme styles extracted to their own css class (`d3-context-menu-theme`)
+### What's new in version 1.0.1
+* Default theme styles extracted to their own CSS class (`d3-context-menu-theme`)
 * Ability to specify own theme css class via the `theme` configuration option (as string or function returning string)
 * onOpen/onClose callbacks now have consistent signature (they receive `data` and `index`, and `this` argument refers to the DOM element the context menu is related to)
 * all other functions (eg. `position`, `menu`) have the same signature and `this` object as `onClose`/`onOpen`
 * Context menu now closes on `mousedown` outside of the menu, instead of `click` outside (to mimic behaviour of the native context menu)
-* `disabled` and `divider` can now be functions as well and have the same siganture and `this` object as explained above
+* `disabled` and `divider` can now be functions as well and have the same signature and `this` object as explained above
 * Close the context menu programatically using `d3.contextMenu('close');`
 
 ### What's new in version 0.2.1
