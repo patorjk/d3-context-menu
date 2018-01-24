@@ -1,29 +1,22 @@
-(function(root, factory) {
-	if (typeof module === 'object' && module.exports) {
-		module.exports = function(d3) {
-			d3.contextMenu = factory(d3);
-			return d3.contextMenu;
-		};
-	} else if(typeof define === 'function' && define.amd) {
-		try {
-			var d3 = require('d3');
-		} catch (e) {
-			d3 = root.d3;
-		}
-
-		d3.contextMenu = factory(d3);
-		define([], function() {
-			return d3.contextMenu;
-		});
-	} else if(root.d3) {
-		root.d3.contextMenu = factory(root.d3);
-	}
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module with d3 as a dependency.
+        define(['d3'], factory)
+    } else if (typeof module === 'object' && module.exports) {
+        // CommonJS
+        var d3 = require('d3')
+        module.exports = factory(d3)
+    } else {
+        // Browser global.
+        root.d3.contextMenu = factory(root.d3)
+    }
 }(	this, 
 	function(d3) {
 		return function (menu, opts) {
 
 			var openCallback,
-				closeCallback;
+				closeCallback,
+				afterOpenbCallback;
 
 			if (typeof opts === 'function') {
 				openCallback = opts;
@@ -31,6 +24,7 @@
 				opts = opts || {};
 				openCallback = opts.onOpen;
 				closeCallback = opts.onClose;
+				afterOpenbCallback = opts.afterOpen;
 			}
 
 			// create the div element that will hold the context menu
@@ -107,6 +101,12 @@
 					.style('left', (d3.event.pageX - 2) + 'px')
 					.style('top', (d3.event.pageY - 2) + 'px')
 					.style('display', 'block');
+
+                if (afterOpenbCallback) {
+                    if (afterOpenbCallback(data, index) === false) {
+                        return;
+                    }
+                }
 
 				d3.event.preventDefault();
 				d3.event.stopPropagation();

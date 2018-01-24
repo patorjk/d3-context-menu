@@ -1,0 +1,10 @@
+/.idea/
+/.vscode/
+
+/typings/
+/node_modules/
+
+/dist/
+/.tmp/
+
+.DS_Store
