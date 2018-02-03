@@ -168,7 +168,8 @@
 				// display context menu
 				d3.select('.d3-context-menu')
 					.style('left', (position ? position.left : d3.event.pageX - 2) + 'px')
-					.style('top', (position ? position.top : d3.event.pageY - 2) + 'px');
+					.style('top', (position ? position.top : d3.event.pageY - 2) + 'px')
+					.style('display', 'block');
 
 				d3.event.preventDefault();
 				d3.event.stopPropagation();
