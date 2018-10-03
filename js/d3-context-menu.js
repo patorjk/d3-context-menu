@@ -1,9 +1,7 @@
 (function(root, factory) {
 	if (typeof module === 'object' && module.exports) {
-		module.exports = function(d3) {
-			d3.contextMenu = factory(d3);
-			return d3.contextMenu;
-		};
+		var d3 = require('d3');
+		module.exports = factory(d3);
 	} else if(typeof define === 'function' && define.amd) {
 		try {
 			var d3 = require('d3');
@@ -18,55 +16,123 @@
 	} else if(root.d3) {
 		root.d3.contextMenu = factory(root.d3);
 	}
-}(	this, 
-	function(d3) {
-		return function (menu, opts) {
+}(this,
+	function (d3) {
+		var utils = {
+			noop: function () {},
+			
+			/**
+			 * @param {*} value
+			 * @returns {Boolean}
+			 */
+			isFn: function (value) {
+				return typeof value === 'function';
+			},
 
-			var openCallback,
-				closeCallback;
+			/**
+			 * @param {*} value
+			 * @returns {Function}
+			 */
+			const: function (value) {
+				return function () { return value; };
+			},
 
-			if (typeof opts === 'function') {
-				openCallback = opts;
-			} else {
-				opts = opts || {};
-				openCallback = opts.onOpen;
-				closeCallback = opts.onClose;
+			/**
+			 * @param {Function|*} value
+			 * @param {*} [fallback]
+			 * @returns {Function}
+			 */
+			toFactory: function (value, fallback) {
+				value = (value === undefined) ? fallback : value;
+				return utils.isFn(value) ? value : utils.const(value);
+			}
+		};
+
+		// global state for d3-context-menu
+		var d3ContextMenu = null;
+
+		var closeMenu = function () {
+			// global state is populated if a menu is currently opened
+			if (d3ContextMenu) {
+				d3.select('.d3-context-menu').remove();
+				d3.select('body').on('mousedown.d3-context-menu', null);
+				d3ContextMenu.boundCloseCallback();
+				d3ContextMenu = null;
+			}
+		};
+
+		/**
+		 * Calls API method (e.g. `close`) or
+		 * returns handler function for the `contextmenu` event
+		 * @param {Function|Array|String} menuItems
+		 * @param {Function|Object} config
+		 * @returns {?Function}
+		 */
+		return function (menuItems, config) {
+			// allow for `d3.contextMenu('close');` calls
+			// to programatically close the menu
+			if (menuItems === 'close') {
+				return closeMenu();
 			}
 
-			// create the div element that will hold the context menu
-			d3.selectAll('.d3-context-menu').data([1])
-				.enter()
-				.append('div')
-				.attr('class', 'd3-context-menu');
+			// for convenience, make `menuItems` a factory
+			// and `config` an object
+			menuItems = utils.toFactory(menuItems);
 
-			// close menu
-			d3.select('body').on('click.d3-context-menu', function() {
-				d3.select('.d3-context-menu').style('display', 'none');
-				if (closeCallback) {
-					closeCallback();
-				}
-			});
+			if (utils.isFn(config)) {
+				config = { onOpen: config };
+			}
+			else {
+				config = config || {};
+			}
 
-			// this gets executed when a contextmenu event occurs
-			return function(data, index) {
-				var elm = this;
+			// resolve config
+			var openCallback = config.onOpen || utils.noop;
+			var closeCallback = config.onClose || utils.noop;
+			var positionFactory = utils.toFactory(config.position);
+			var themeFactory = utils.toFactory(config.theme, 'd3-context-menu-theme');
 
-				d3.selectAll('.d3-context-menu').html('');
+			/**
+			 * Context menu event handler
+			 * @param {*} data
+			 * @param {Number} index
+			 */
+			return function (data, index) {
+				var element = this;
+
+				// close any menu that's already opened
+				closeMenu();
+
+				// store close callback already bound to the correct args and scope
+				d3ContextMenu = {
+					boundCloseCallback: closeCallback.bind(element, data, index)
+				};
+
+				// create the div element that will hold the context menu
+				d3.selectAll('.d3-context-menu').data([1])
+					.enter()
+					.append('div')
+					.attr('class', 'd3-context-menu ' + themeFactory.bind(element)(data, index));
+
+				// close menu on mousedown outside
+				d3.select('body').on('mousedown.d3-context-menu', closeMenu);
+
 				var list = d3.selectAll('.d3-context-menu')
-					.on('contextmenu', function(d) {
-						d3.select('.d3-context-menu').style('display', 'none'); 
-		  				d3.event.preventDefault();
+					.on('contextmenu', function() {
+						closeMenu();
+						d3.event.preventDefault();
 						d3.event.stopPropagation();
 					})
 					.append('ul');
-				list.selectAll('li').data(typeof menu === 'function' ? menu(data) : menu).enter()
+				
+				list.selectAll('li').data(menuItems.bind(element)(data, index)).enter()
 					.append('li')
 					.attr('class', function(d) {
 						var ret = '';
-						if (d.divider) {
+						if (utils.toFactory(d.divider).bind(element)(data, index)) {
 							ret += ' is-divider';
 						}
-						if (d.disabled) {
+						if (utils.toFactory(d.disabled).bind(element)(data, index)) {
 							ret += ' is-disabled';
 						}
 						if (!d.action) {
@@ -75,34 +141,31 @@
 						return ret;
 					})
 					.html(function(d) {
-						if (d.divider) {
+						if (utils.toFactory(d.divider).bind(element)(data, index)) {
 							return '<hr>';
 						}
 						if (!d.title) {
 							console.error('No title attribute set. Check the spelling of your options.');
 						}
-						return (typeof d.title === 'string') ? d.title : d.title(data);
+						return utils.toFactory(d.title).bind(element)(data, index);
 					})
 					.on('click', function(d, i) {
-						if (d.disabled) return; // do nothing if disabled
+						if (utils.toFactory(d.disabled).bind(element)(data, index)) return; // do nothing if disabled
 						if (!d.action) return; // headers have no "action"
-						d.action(elm, data, index);
-						d3.select('.d3-context-menu').style('display', 'none');
-
-						if (closeCallback) {
-							closeCallback();
-						}
+						d.action.bind(element)(data, index);
+						closeMenu();
 					});
 
 				// the openCallback allows an action to fire before the menu is displayed
 				// an example usage would be closing a tooltip
-				if (openCallback) {
-					if (openCallback(data, index) === false) {
-						return;
-					}
+				if (openCallback.bind(element)(data, index) === false) {
+					return;
 				}
-
+        
 				//console.log(this.parentNode.parentNode.parentNode);//.getBoundingClientRect());   Use this if you want to align your menu from the containing element, otherwise aligns towards center of window
+
+				// get position
+				var position = positionFactory.bind(element)(data, index);
 
 				var doc = document.documentElement;
 				var pageWidth = window.innerWidth || doc.clientWidth;
@@ -110,21 +173,21 @@
 
 				var horizontalAlignment = 'left';
 				var horizontalAlignmentReset = 'right';
-				var horizontalValue = d3.event.pageX - 2;
+				var horizontalValue = position ? position.left : d3.event.pageX - 2;
 				if (d3.event.pageX > pageWidth/2){
 					horizontalAlignment = 'right';
 					horizontalAlignmentReset = 'left';
-					horizontalValue = pageWidth - d3.event.pageX - 2;
+					horizontalValue = position ? pageWidth - position.left : pageWidth - d3.event.pageX - 2;
 				} 
 				
 
 				var verticalAlignment = 'top';
 				var verticalAlignmentReset = 'bottom';
-				var verticalValue = d3.event.pageY - 2;
+				var verticalValue = position ? position.top : d3.event.pageY - 2;
 				if (d3.event.pageY > pageHeight/2){
 					verticalAlignment = 'bottom';
 					verticalAlignmentReset = 'top';
-					verticalValue = pageHeight - d3.event.pageY - 2	;
+					verticalValue = position ? pageHeight - position.top : pageHeight - d3.event.pageY - 2	;
 				} 
 
 				// display context menu
@@ -133,7 +196,6 @@
 					.style(horizontalAlignmentReset, null)
 					.style(verticalAlignment, (verticalValue) + 'px')
 					.style(verticalAlignmentReset, null)
-
 					.style('display', 'block');
 
 				d3.event.preventDefault();
