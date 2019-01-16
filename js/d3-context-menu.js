@@ -42,20 +42,20 @@
 			});
 
 			// this gets executed when a contextmenu event occurs
-			return function(data, index) {
+			return function (data, index) {
 				var elm = this;
 
 				d3.selectAll('.d3-context-menu').html('');
 				var list = d3.selectAll('.d3-context-menu')
-					.on('contextmenu', function(d) {
-						d3.select('.d3-context-menu').style('display', 'none'); 
-		  				d3.event.preventDefault();
+					.on('contextmenu', function (d) {
+						d3.select('.d3-context-menu').style('display', 'none');
+						d3.event.preventDefault();
 						d3.event.stopPropagation();
 					})
 					.append('ul');
 				list.selectAll('li').data(typeof menu === 'function' ? menu(data) : menu).enter()
 					.append('li')
-					.attr('class', function(d) {
+					.attr('class', function (d) {
 						var ret = '';
 						if (d.divider) {
 							ret += ' is-divider';
@@ -66,27 +66,51 @@
 						if (!d.action) {
 							ret += ' is-header';
 						}
+						if (d.hasSubmenu) {
+							ret += ' has-submenu';
+						}
 						return ret;
 					})
-					.html(function(d) {
+					.html(function (d) {
 						if (d.divider) {
 							return '<hr>';
 						}
 						if (!d.title) {
 							console.error('No title attribute set. Check the spelling of your options.');
 						}
+						if (d.hasSubmenu) {
+							return d.title + "<ul class=" + "'is-subMenu' style= " + "'display: none'" + "><li><input></ul></li>"
+						}
 						return (typeof d.title === 'string') ? d.title : d.title(data);
 					})
-					.on('click', function(d, i) {
+					.on('click', function (d, i) {
 						if (d.disabled) return; // do nothing if disabled
 						if (!d.action) return; // headers have no "action"
-						d.action(elm, data, index);
+						if (d.hasSubmenu) {
+							value = d3.select(this).select('.is-subMenu input').property("value");
+							d.action(value);
+						} else {
+							d.action(elm, data, index);
+						}
 						d3.select('.d3-context-menu').style('display', 'none');
 
 						if (closeCallback) {
 							closeCallback();
 						}
 					});
+
+				d3.select(".is-subMenu").on("click", function () {
+					d3.event.preventDefault();
+					d3.event.stopPropagation();
+				})
+
+				d3.select(".has-submenu").on("mouseenter", function () {
+					d3.select(this).select(".is-subMenu").style("display", "block")
+				})
+
+				d3.select(".has-submenu").on("mouseleave", function () {
+					d3.select(this).select(".is-subMenu").style("display", "none")
+				})
 
 				// the openCallback allows an action to fire before the menu is displayed
 				// an example usage would be closing a tooltip
@@ -102,11 +126,11 @@
 					.style('top', (d3.event.pageY - 2) + 'px')
 					.style('display', 'block');
 
-                if (afterOpenbCallback) {
-                    if (afterOpenbCallback(data, index) === false) {
-                        return;
-                    }
-                }
+				if (afterOpenbCallback) {
+					if (afterOpenbCallback(data, index) === false) {
+						return;
+					}
+				}
 
 				d3.event.preventDefault();
 				d3.event.stopPropagation();
