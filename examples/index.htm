@@ -6,7 +6,7 @@
 
 	<link href="../css/d3-context-menu.css" rel="stylesheet">
 
-	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
 	<script src="../js/d3-context-menu.js"></script>
 
 	<style>
@@ -21,7 +21,7 @@
 	<script>
 		var item4Disabled = false;
 		var useDarkTheme = false;
-		
+
 		// Define your menu
 		var menu = [
 
@@ -74,6 +74,58 @@
 			*/
 			{
 				title: 'Header'
+			},
+			/*
+				If an item has a "children" property, it'll be create nested menu
+			*/
+			{
+				title: 'Parent(nested menu)',
+				children: [
+					{
+						title: 'Child',
+						children: [
+							{
+								// header
+								title: 'Grand-Child1'
+							},
+							{
+								// normal
+								title: 'Grand-Child2',
+								action: function() {}
+							},
+							{
+								// divider
+								divider: true
+							},
+							{
+								// disable
+								title: 'Grand-Child3',
+								action: function() {},
+								disabled: true
+							}
+						]
+					},
+					{
+						title: 'Change Color',
+						children: function() {
+							var colors = ['red', 'blue', 'green', 'yellow', 'orange', 'black', 'white'];
+							return colors.map(function(color) {
+								return {
+									title: color,
+									action: function (data, index) {
+										console.log('color changed from ' + data + ' to ' + color);
+										d3.select(this)
+											.datum(color)
+											.attr('fill', color);
+									},
+									disabled: function (data, index) {
+										return data === color;
+									}
+								}
+							})
+						}
+					}
+				]
 			},
 			{
 				title: 'Last item',

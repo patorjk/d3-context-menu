@@ -20,7 +20,7 @@
 	function (d3) {
 		var utils = {
 			noop: function () {},
-			
+
 			/**
 			 * @param {*} value
 			 * @returns {Boolean}
@@ -117,44 +117,15 @@
 				// close menu on mousedown outside
 				d3.select('body').on('mousedown.d3-context-menu', closeMenu);
 
-				var list = d3.selectAll('.d3-context-menu')
+				var parent = d3.selectAll('.d3-context-menu')
 					.on('contextmenu', function() {
 						closeMenu();
 						d3.event.preventDefault();
 						d3.event.stopPropagation();
 					})
 					.append('ul');
-				
-				list.selectAll('li').data(menuItems.bind(element)(data, index)).enter()
-					.append('li')
-					.attr('class', function(d) {
-						var ret = '';
-						if (utils.toFactory(d.divider).bind(element)(data, index)) {
-							ret += ' is-divider';
-						}
-						if (utils.toFactory(d.disabled).bind(element)(data, index)) {
-							ret += ' is-disabled';
-						}
-						if (!d.action) {
-							ret += ' is-header';
-						}
-						return ret;
-					})
-					.html(function(d) {
-						if (utils.toFactory(d.divider).bind(element)(data, index)) {
-							return '<hr>';
-						}
-						if (!d.title) {
-							console.error('No title attribute set. Check the spelling of your options.');
-						}
-						return utils.toFactory(d.title).bind(element)(data, index);
-					})
-					.on('click', function(d, i) {
-						if (utils.toFactory(d.disabled).bind(element)(data, index)) return; // do nothing if disabled
-						if (!d.action) return; // headers have no "action"
-						d.action.bind(element)(data, index);
-						closeMenu();
-					});
+
+				parent.call(createNestedMenu, element);
 
 				// the openCallback allows an action to fire before the menu is displayed
 				// an example usage would be closing a tooltip
@@ -173,6 +144,49 @@
 
 				d3.event.preventDefault();
 				d3.event.stopPropagation();
+
+
+				function createNestedMenu(parent, root, depth = 0) {
+					var resolve = function (value) {
+						return utils.toFactory(value).call(root, data, index);
+					};
+
+					parent.selectAll('li')
+					.data(function (d) {
+							var baseData = depth === 0 ? menuItems : d.children;
+							return resolve(baseData);
+						})
+						.enter()
+						.append('li')
+						.each(function (d) {
+							// get value of each data
+							var isDivider = !!resolve(d.divider);
+							var isDisabled = !!resolve(d.disabled);
+							var hasChildren = !!resolve(d.children);
+							var hasAction = !!d.action;
+							var text = isDivider ? '<hr>' : resolve(d.title);
+
+							var listItem = d3.select(this)
+								.classed('is-divider', isDivider)
+								.classed('is-disabled', isDisabled)
+								.classed('is-header', !hasChildren && !hasAction)
+								.classed('is-parent', hasChildren)
+								.html(text)
+								.on('click', function () {
+									// do nothing if disabled or no action
+									if (isDisabled || !hasAction) return;
+
+									d.action.call(root, data, index);
+									closeMenu();
+								});
+
+							if (hasChildren) {
+								// create children(`next parent`) and call recursive
+								var children = listItem.append('ul').classed('is-children', true);
+								createNestedMenu(children, root, ++depth)
+							}
+						});
+				}
 			};
 		};
 	}

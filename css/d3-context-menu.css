@@ -105,3 +105,40 @@
 	border-top: 1px solid rgba(0, 0, 0, 0.1);
 	border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
+
+/*
+	Nested Menu
+*/
+.d3-context-menu-theme ul li.is-parent:after {
+	border-left: 7px solid transparent;
+	border-top: 7px solid red;
+	content: "";
+	height: 0;
+	position: absolute;
+	right: 8px;
+	top: 35%;
+	transform: rotate(45deg);
+	width: 0;
+}
+
+.d3-context-menu-theme ul li.is-parent {
+	padding-right: 20px;
+	position: relative;
+}
+
+.d3-context-menu-theme ul.is-children {
+	background-color: #f2f2f2;
+	border: 1px solid #d4d4d4;
+	color: black;
+	display: none;
+	left: 100%;
+	margin: -5px 0;
+	padding: 4px 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.d3-context-menu-theme li.is-parent:hover > ul.is-children {
+	display: block;
+}
