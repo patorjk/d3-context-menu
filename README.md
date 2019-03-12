@@ -64,23 +64,59 @@ g.selectAll('circles')
 Menus can have Headers and Dividers. To specify a header simply don't define an "action" property. To specify a divider, simply add a "divider: true" property to the menu item, and it'll be considered a divider. Example menu definition:
 
 ```
-		var menu = [
-			{
-				title: 'Header',
-			},
-			{
-				title: 'Normal item',
-				action: function() {}
-			},
-			{
-				divider: true
-			},
-			{
-				title: 'Last item',
-				action: function() {}
-			}
-		];
+var menu = [
+	{
+		title: 'Header',
+	},
+	{
+		title: 'Normal item',
+		action: function() {}
+	},
+	{
+		divider: true
+	},
+	{
+		title: 'Last item',
+		action: function() {}
+	}
+];
+```
 
+#### Nested Menu
+
+Menus can have Nested Menu. To specify a nested menu, simply add "children" property. Children has item of array.
+
+```
+var menu = [
+	{
+		title: 'Parent',
+		children: [
+			{
+				title: 'Child',
+				children: [
+					{
+						// header
+						title: 'Grand-Child1'
+					},
+					{
+						// normal
+						title: 'Grand-Child2',
+						action: function() {}
+					},
+					{
+						// divider
+						divider: true
+					},
+					{
+						// disable
+						title: 'Grand-Child3',
+						action: function() {}
+					}
+				]
+			}
+		]
+	},
+];
 ```
 
 See the index.htm file in the example folder to see this in action.
@@ -143,7 +179,7 @@ var menu = [
 [Delete Circle MyCircle]
 [Item 2]
 ```
-	
+
 #### Dynamic menu list
 
 You can also have different lists of menu items for different nodes if `menu` is a function:
@@ -178,7 +214,7 @@ var menu = function(data) {
 // Menu shown for nodes with x < 100 contains 1 item, while other nodes have 2 menu items
 
 ```
-	
+
 #### Deleting Nodes Example
 
 The following example shows how to add a right click menu to a tree diagram:
