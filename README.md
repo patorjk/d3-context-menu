@@ -302,6 +302,12 @@ The following example shows how to add a right click menu to a tree diagram:
 
 http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
 
+### What's new in version 1.1.1
+* Menu close bug fix.
+
+### What's new in version 1.1.0
+* Nested submenus are now supported.
+
 ### What's new in version 1.0.1
 * Default theme styles extracted to their own CSS class (`d3-context-menu-theme`)
 * Ability to specify own theme css class via the `theme` configuration option (as string or function returning string)
