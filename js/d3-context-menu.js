@@ -116,6 +116,7 @@
 
 				// close menu on mousedown outside
 				d3.select('body').on('mousedown.d3-context-menu', closeMenu);
+				d3.select('body').on('click.d3-context-menu', closeMenu);
 
 				var parent = d3.selectAll('.d3-context-menu')
 					.on('contextmenu', function() {
