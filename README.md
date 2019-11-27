@@ -302,6 +302,9 @@ The following example shows how to add a right click menu to a tree diagram:
 
 http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
 
+### What's new in version 1.1.2
+* Menu updated so it wont go off bottom or right of screen when window is smaller.
+
 ### What's new in version 1.1.1
 * Menu close bug fix.
 
