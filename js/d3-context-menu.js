@@ -192,6 +192,7 @@
 							var isDisabled = !!resolve(d.disabled);
 							var hasChildren = !!resolve(d.children);
 							var hasAction = !!d.action;
+							var hasCls = !!d.class;
 							var text = isDivider ? '<hr>' : resolve(d.title);
 
 							var listItem = d3.select(this)
@@ -199,6 +200,7 @@
 								.classed('is-disabled', isDisabled)
 								.classed('is-header', !hasChildren && !hasAction)
 								.classed('is-parent', hasChildren)
+								.classed(resolve(d.class),hasCls)
 								.html(text)
 								.on('click', function () {
 									// do nothing if disabled or no action
