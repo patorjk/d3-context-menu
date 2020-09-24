@@ -19,7 +19,7 @@ bower install d3-context-menu
 var menu = [
 	{
 		title: 'Item #1',
-		action: function(d, i) {
+		action: function(d) {
 			console.log('Item #1 clicked!');
 			console.log('The data for this circle is: ' + d);
 		},
@@ -27,7 +27,7 @@ var menu = [
 	},
 	{
 		title: 'Item #2',
-		action: function(d, i) {
+		action: function(d) {
 			console.log('You have clicked the second item!');
 			console.log('The data for this circle is: ' + d);
 		}
@@ -160,7 +160,7 @@ var menu = [
 		title: function(d) {
 			return 'Delete circle '+d.circleName;
 		},
-		action: function(d, i) {
+		action: function(d) {
 			// delete it
 		}
 	},
@@ -168,7 +168,7 @@ var menu = [
 		title: function(d) {
 			return 'Item 2';
 		},
-		action: function(d, i) {
+		action: function(d) {
 			// do nothing interesting
 		}
 	}
@@ -189,7 +189,7 @@ var menu = function(data) {
 	if (data.x > 100) {
 		return [{
 			title: 'Item #1',
-			action: function(d, i) {
+			action: function(d) {
 				console.log('Item #1 clicked!');
 				console.log('The data for this circle is: ' + d);
 			}
@@ -197,13 +197,13 @@ var menu = function(data) {
 	} else {
 		return [{
 			title: 'Item #1',
-			action: function(d, i) {
+			action: function(d) {
 				console.log('Item #1 clicked!');
 				console.log('The data for this circle is: ' + d);
 			}
 		}, {
 			title: 'Item #2',
-			action: function(d, i) {
+			action: function(d) {
 				console.log('Item #2 clicked!');
 				console.log('The data for this circle is: ' + d);
 			}
@@ -253,7 +253,7 @@ or
 		onClose: function() {
 			...
 		},
-		position: function(d, i) {
+		position: function(d) {
 			var elm = this;
 			var bounds = elm.getBoundingClientRect();
 
@@ -301,6 +301,10 @@ d3.contextMenu('close');
 The following example shows how to add a right click menu to a tree diagram:
 
 http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
+
+### What's new in version 1.1.3
+* Added support for D3 6.x
+* The `index` parameter of callbacks are undefined when using D3 6.x or above. See the index.htm file in the example folder to see how to get the proper `index` value in that case.
 
 ### What's new in version 1.1.2
 * Menu updated so it wont go off bottom or right of screen when window is smaller.

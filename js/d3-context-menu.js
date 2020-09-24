@@ -94,11 +94,27 @@
 
 			/**
 			 * Context menu event handler
-			 * @param {*} data
-			 * @param {Number} index
+			 * @param {*} param1
+			 * @param {*} param2
 			 */
-			return function (data, index) {
+			return function (param1, param2) {
 				var element = this;
+
+				var event, data, index;
+				if (d3.event === undefined) {
+					// Using D3 6.x or above
+					event = param1;
+					data = param2;
+
+					// We cannot tell the index properly in new D3 versions,
+					// since it is not possible to access the original selection.
+					index = undefined;
+				} else {
+					// Using D3 5.x or below
+					event = d3.event;
+					data = param1;
+					index = param2;
+				}
 
 				// close any menu that's already opened
 				closeMenu();
@@ -121,8 +137,8 @@
 				var parent = d3.selectAll('.d3-context-menu')
 					.on('contextmenu', function() {
 						closeMenu();
-						d3.event.preventDefault();
-						d3.event.stopPropagation();
+						event.preventDefault();
+						event.stopPropagation();
 					})
 					.append('ul');
 
@@ -145,21 +161,21 @@
 
 				var horizontalAlignment = 'left';
 				var horizontalAlignmentReset = 'right';
-				var horizontalValue = position ? position.left : d3.event.pageX - 2;
-				if (d3.event.pageX > pageWidth/2){
+				var horizontalValue = position ? position.left : event.pageX - 2;
+				if (event.pageX > pageWidth/2){
 					horizontalAlignment = 'right';
 					horizontalAlignmentReset = 'left';
-					horizontalValue = position ? pageWidth - position.left : pageWidth - d3.event.pageX - 2;
+					horizontalValue = position ? pageWidth - position.left : pageWidth - event.pageX - 2;
 				} 
 				
 
 				var verticalAlignment = 'top';
 				var verticalAlignmentReset = 'bottom';
-				var verticalValue = position ? position.top : d3.event.pageY - 2;
-				if (d3.event.pageY > pageHeight/2){
+				var verticalValue = position ? position.top : event.pageY - 2;
+				if (event.pageY > pageHeight/2){
 					verticalAlignment = 'bottom';
 					verticalAlignmentReset = 'top';
-					verticalValue = position ? pageHeight - position.top : pageHeight - d3.event.pageY - 2	;
+					verticalValue = position ? pageHeight - position.top : pageHeight - event.pageY - 2;
 				} 
 
 				// display context menu
@@ -170,8 +186,8 @@
 					.style(verticalAlignmentReset, null)
 					.style('display', 'block');
 
-				d3.event.preventDefault();
-				d3.event.stopPropagation();
+				event.preventDefault();
+				event.stopPropagation();
 
 
 				function createNestedMenu(parent, root, depth = 0) {
