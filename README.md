@@ -302,9 +302,10 @@ The following example shows how to add a right click menu to a tree diagram:
 
 http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
 
-### What's new in version 1.1.3
+### What's new in version 2.0.0
 * Added support for D3 6.x
 * The `index` parameter of callbacks are undefined when using D3 6.x or above. See the index.htm file in the example folder to see how to get the proper `index` value in that case.
+* Added class property for menu items that allows specifying CSS classes (see: https://github.com/patorjk/d3-context-menu/pull/56).
 
 ### What's new in version 1.1.2
 * Menu updated so it wont go off bottom or right of screen when window is smaller.
