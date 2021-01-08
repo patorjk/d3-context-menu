@@ -302,6 +302,40 @@ The following example shows how to add a right click menu to a tree diagram:
 
 http://plnkr.co/edit/bDBe0xGX1mCLzqYGOqOS?p=info
 
+#### Additional callback arguments
+
+Depending on the D3 library version used the callback functions can provide an additional argument:
+
+- for D3 6.x or above it will be the event, since the global d3.event is not available.
+
+```
+var menu = [
+	{
+		title: 'Item #1',
+		action: function(d, event) {
+			console.log('Item #1 clicked!');
+			console.log('The data for this circle is: ' + d);
+			console.log('The event is: ' + event);
+		}
+	}
+]
+```
+
+- for D3 5.x or below it will be the index, for backward compatibility reasons.
+
+```
+var menu = [
+	{
+		title: 'Item #1',
+		action: function(d, index) {
+			console.log('Item #1 clicked!');
+			console.log('The data for this circle is: ' + d);
+			console.log('The index is: ' + index);
+		}
+	}
+]
+```
+
 ### What's new in version 2.0.0
 * Added support for D3 6.x
 * The `index` parameter of callbacks are undefined when using D3 6.x or above. See the index.htm file in the example folder to see how to get the proper `index` value in that case.

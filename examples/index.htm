@@ -6,7 +6,7 @@
 
 	<link href="../css/d3-context-menu.css" rel="stylesheet">
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.2.0/d3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.3.1/d3.min.js"></script>
 	<script src="../js/d3-context-menu.js"></script>
 
 	<style>
@@ -27,42 +27,42 @@
 
 			{
 				title: 'Toggle dark theme',
-				action: function (data) {
+				action: function (data, event) {
 					var index = selection.nodes().indexOf(this);
-					console.log('Item clicked', 'element:', this, 'data:', data, 'index:', index);
+					console.log('Item clicked', 'element:', this, 'data:', data, 'event:', event, 'index:', index);
 					useDarkTheme = !useDarkTheme;
 				}
 			},
 			{
 				title: 'Item #2',
-				action: function (data) {
+				action: function (data, event) {
 					var index = selection.nodes().indexOf(this);
-					console.log('Item clicked', 'element:', this, 'data:', data, 'index:', index);
+					console.log('Item clicked', 'element:', this, 'data:', data, 'event:', event, 'index:', index);
 				}
 			},
 
 			{
-				title: function (data) {
+				title: function (data, event) {
 					if (item4Disabled) {
 						return 'Re-enable menu item #4';
 					} else {
 						return 'Disable menu item #4';
 					}
 				},
-				action: function (data) {
+				action: function (data, event) {
 					var index = selection.nodes().indexOf(this);
-					console.log('Disabling item 4!', 'element:', this, 'data:', data, 'index:', index);
+					console.log('Disabling item 4!', 'element:', this, 'data:', data, 'event:', event, 'index:', index);
 					item4Disabled = !item4Disabled;
 				}
 			},
 			{
 				title: 'Item #4',
-				disabled: function (data) {
+				disabled: function (data, event) {
 					return item4Disabled;
 				},
-				action: function (data) {
+				action: function (data, event) {
 					var index = selection.nodes().indexOf(this);
-					console.log('Item clicked', 'element:', this, 'data:', data, 'index:', index);
+					console.log('Item clicked', 'element:', this, 'data:', data, 'event:', event, 'index:', index);
 				}
 			},
 
@@ -116,13 +116,13 @@
 							return colors.map(function(color) {
 								return {
 									title: color,
-									action: function (data) {
+									action: function (data, event) {
 										console.log('color changed from ' + data + ' to ' + color);
 										d3.select(this)
 											.datum(color)
 											.attr('fill', color);
 									},
-									disabled: function (data) {
+									disabled: function (data, event) {
 										return data === color;
 									}
 								}
@@ -133,9 +133,9 @@
 			},
 			{
 				title: 'Last item',
-				action: function (data) {
+				action: function (data, event) {
 					var index = selection.nodes().indexOf(this);
-					console.log('Item clicked', 'element:', this, 'data:', data, 'index:', index);
+					console.log('Item clicked', 'element:', this, 'data:', data, 'event:', event, 'index:', index);
 				}
 			},
 		]
@@ -171,15 +171,15 @@
 						return 'd3-context-menu-theme';
 					}
 				},
-				onOpen: function (data) {
+				onOpen: function (data, event) {
 					var index = selection.nodes().indexOf(this);
-					console.log('Menu Opened!', 'element:', this, 'data:', data, 'index:', index);
+					console.log('Menu Opened!', 'element:', this, 'data:', data, 'event:', event, 'index:', index);
 				},
-				onClose: function (data) {
+				onClose: function (data, event) {
 					var index = selection.nodes().indexOf(this);
-					console.log('Menu Closed!', 'element:', this, 'data:', data, 'index:', index);
+					console.log('Menu Closed!', 'element:', this, 'data:', data, 'event:', event, 'index:', index);
 				},
-				position: function (data) {
+				position: function (data, event) {
 					var bounds = this.getBoundingClientRect();
 					if (data === 'green') {
 						// first circle will have the menu aligned top-right
