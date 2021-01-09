@@ -100,7 +100,12 @@
 			return function (param1, param2) {
 				var element = this;
 
-				var event, data, index;
+				// eventOrIndex is the second argument that will be passed to 
+				// the context menu callbacks: for D3 6.x or above it will be 
+				// the event, since the global d3.event is not available.
+				// For D3 5.x or below it will be the index, for backward 
+				// compatibility reasons.
+				var event, data, index, eventOrIndex;
 				if (d3.event === undefined) {
 					// Using D3 6.x or above
 					event = param1;
@@ -109,11 +114,13 @@
 					// We cannot tell the index properly in new D3 versions,
 					// since it is not possible to access the original selection.
 					index = undefined;
+					eventOrIndex = event;
 				} else {
 					// Using D3 5.x or below
 					event = d3.event;
 					data = param1;
 					index = param2;
+					eventOrIndex = index;
 				}
 
 				// close any menu that's already opened
@@ -121,14 +128,14 @@
 
 				// store close callback already bound to the correct args and scope
 				d3ContextMenu = {
-					boundCloseCallback: closeCallback.bind(element, data, index)
+					boundCloseCallback: closeCallback.bind(element, data, eventOrIndex)
 				};
 
 				// create the div element that will hold the context menu
 				d3.selectAll('.d3-context-menu').data([1])
 					.enter()
 					.append('div')
-					.attr('class', 'd3-context-menu ' + themeFactory.bind(element)(data, index));
+					.attr('class', 'd3-context-menu ' + themeFactory.bind(element)(data, eventOrIndex));
 
 				// close menu on mousedown outside
 				d3.select('body').on('mousedown.d3-context-menu', closeMenu);
@@ -146,14 +153,14 @@
 
 				// the openCallback allows an action to fire before the menu is displayed
 				// an example usage would be closing a tooltip
-				if (openCallback.bind(element)(data, index) === false) {
+				if (openCallback.bind(element)(data, eventOrIndex) === false) {
 					return;
 				}
         
 				//console.log(this.parentNode.parentNode.parentNode);//.getBoundingClientRect());   Use this if you want to align your menu from the containing element, otherwise aligns towards center of window
 
 				// get position
-				var position = positionFactory.bind(element)(data, index);
+				var position = positionFactory.bind(element)(data, eventOrIndex);
 
 				var doc = document.documentElement;
 				var pageWidth = window.innerWidth || doc.clientWidth;
@@ -192,7 +199,7 @@
 
 				function createNestedMenu(parent, root, depth = 0) {
 					var resolve = function (value) {
-						return utils.toFactory(value).call(root, data, index);
+						return utils.toFactory(value).call(root, data, eventOrIndex);
 					};
 
 					parent.selectAll('li')
@@ -222,7 +229,7 @@
 									// do nothing if disabled or no action
 									if (isDisabled || !hasAction) return;
 
-									d.action.call(root, data, index);
+									d.action.call(root, data, eventOrIndex);
 									closeMenu();
 								});
 
