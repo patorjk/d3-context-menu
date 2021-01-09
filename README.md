@@ -336,6 +336,9 @@ var menu = [
 ]
 ```
 
+### What's new in version 2.1.0
+* Added support for accessing event information in with D3 6.x.
+
 ### What's new in version 2.0.0
 * Added support for D3 6.x
 * The `index` parameter of callbacks are undefined when using D3 6.x or above. See the index.htm file in the example folder to see how to get the proper `index` value in that case.
